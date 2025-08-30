@@ -1,0 +1,30 @@
+{
+  "name": "ctms-walletservice",
+  "version": "1.0.0",
+  "description": "- **Service Name**: Wallet & Budget Service\r - **Port**: 3003\r - **Database**: PostgreSQL\r - **Service Type**: Core Financial Service\r - **Communication**: REST API + Event-Driven",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pragyan14/CTMS-WalletService.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pragyan14/CTMS-WalletService/issues"
+  },
+  "homepage": "https://github.com/Pragyan14/CTMS-WalletService#readme",
+  "dependencies": {
+    "@prisma/client": "^6.12.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "prisma": "^6.12.0"
+  }
+}

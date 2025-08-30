@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Wallet {
+  wallet_id String   @id @default(uuid())
+  user_id   String   @unique
+  balance   Decimal  @default(0.00)
+  currency  String   @default("USD")
+  status    String   @default("ACTIVE")
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@index([status], name: "idx_wallets_status")
+}
+
+model Transaction {
+  txn_id         String   @id @default(uuid())
+  wallet_id      String
+  amount         Decimal
+  type           String
+  description    String?
+  reference_id   String?
+  reference_type String?
+  status         String   @default("PENDING")
+  metadata       Json?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now())
+
+  wallet Wallet @relation(fields: [wallet_id], references: [wallet_id])
+
+  @@index([wallet_id], name: "idx_transactions_wallet_id")
+  @@index([type], name: "idx_transactions_type")
+  @@index([status], name: "idx_transactions_status")
+  @@index([created_at], name: "idx_transactions_created_at")
+  @@index([reference_id, reference_type], name: "idx_transactions_reference")
+}
+
+model Budget {
+  budget_id     String   @id @default(uuid())
+  wallet_id     String
+  total_amount  Decimal
+  used_amount   Decimal  @default(0.00)
+  period_type   String   @default("MONTHLY")
+  start_date    DateTime
+  end_date      DateTime
+  status        String   @default("ACTIVE")
+  created_by    String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+
+  wallet Wallet @relation(fields: [wallet_id], references: [wallet_id])
+
+  @@index([wallet_id], name: "idx_budgets_wallet_id")
+  @@index([start_date, end_date], name: "idx_budgets_period")
+  @@index([status], name: "idx_budgets_status")
+}
