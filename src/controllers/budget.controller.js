@@ -1,6 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import prisma from "../lib/prisma.js"
 
 const getBudget = asyncHandler(async (req, res) => {
     const { user_id } = req.params;

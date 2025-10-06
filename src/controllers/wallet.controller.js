@@ -29,6 +29,8 @@ const getWalletByUser = asyncHandler(async (req, res) => {
 const createWallet = asyncHandler(async (req, res) => {
     const { user_id, initial_balance, currency } = req.body;
 
+    
+
     try {
         // Check if wallet already exists for the user
         const existingWallet = await prisma.wallet.findUnique({
@@ -42,7 +44,7 @@ const createWallet = asyncHandler(async (req, res) => {
         const newWallet = await prisma.wallet.create({
             data: {
                 user_id,
-                balance: new Prisma.Decimal(initial_balance),
+                balance: initial_balance || 0,
                 currency,
                 status: "ACTIVE",
             },
@@ -56,7 +58,7 @@ const createWallet = asyncHandler(async (req, res) => {
             throw error;
         }
 
-        throw new ApiError(500, "Failed to create wallet");
+        throw new ApiError(500, "Failed to create wallet",error.message);
     }
 });
 
@@ -65,7 +67,7 @@ const updateStatus = asyncHandler(async (req,res) => {
     const {wallet_id} = req.params;
     const {status} = req.body;
 
-    const allowedStatuses = ["ACTIVE", "FREEZE", "CLOSE"];
+    const allowedStatuses = ["ACTIVE", "FROZEN", "CLOSED"];
 
     try {
 

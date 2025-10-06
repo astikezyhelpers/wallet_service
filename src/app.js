@@ -1,8 +1,12 @@
 import express from 'express';
 import cookieParser from "cookie-parser";
 import { errorHandler } from './middleware/errorHandler.middleware.js';
+import promClient, { register } from 'prom-client'
 
 const app = express();
+
+const collectDefaultMetrics = promClient.collectDefaultMetrics;
+collectDefaultMetrics({register: promClient.register})
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
@@ -16,6 +20,12 @@ import budgetRouter from "./routes/budget.route.js";
 app.use("/api/v1",walletRouter)
 app.use("/api/v1", transactionRouter);
 app.use("/api/v1", budgetRouter);
+
+app.get("/metrics",async (req,res) => {
+    res.setHeader("Content-Type", promClient.register.contentType);
+    const metrics = await promClient.register.metrics();
+    res.send(metrics);
+})
 
 app.use(errorHandler);
 

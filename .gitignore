@@ -119,8 +119,3 @@ dist
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
 /src/generated/prisma
-
-
-.prettierignore
-.prettierrc
-/src/generated/prisma
